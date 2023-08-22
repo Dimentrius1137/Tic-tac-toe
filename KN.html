@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style> 
+table{
+    
+    border-radius: 30px;
+}
+td{
+            border: 2px solid rgb(80, 177, 177);
+            width: 132px;
+            height: 132px;
+            border-collapse: collapse;
+        }
+.cont {
+    display: flex;
+   justify-content: center; 
+   align-items: center; 
+   height: 100vh;
+   flex-direction: column;
+   
+}
+.inner-cont{
+    display: flex;
+   justify-content: space-evenly; 
+   align-items: center; 
+   flex-direction: column;
+   height: 100vh;
+}
+body{
+    background-image: url('bg.jpg');
+    overflow: hidden;
+    background-size: cover;
+    font-family:RobotoSlab;
+}
+@font-face {
+		font-family: 'RobotoSlab';
+		src: url(font/RobotoSlab.ttf); 
+	}
+a{
+    position: fixed;
+    left: 2%;
+    top: 2%;
+    font-size: 24px;
+    border-radius: 25px;
+    border: 2px solid rgb(80, 177, 177);
+    text-decoration: none;
+    color: black;
+    padding: 5px;
+  }
+  .res{
+        border-radius: 25px;
+        border: 2px solid rgb(80, 177, 177);
+        font-size: 24px;
+      }
+</style>
+<body>
+<div class="cont">
+    <div class="inner-cont">
+        <button class="res" onclick="Restart()">Restart</button>
+    <table>
+        <tr>
+          <td style="border-top-left-radius: 30px;"></td>
+          <td></td>
+          <td style="border-top-right-radius: 30px;"></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td style="border-bottom-left-radius: 30px;"></td>
+          <td></td>
+          <td style="border-bottom-right-radius: 30px;"></td>
+        </tr>
+      </table>
+    </div>
+</div>
+<a href="index.html">Обратно</a>
+    <script>
+        
+        const cells = document.querySelectorAll('td');
+        const restart = document.querySelector('.res');
+        const table = document.querySelector('table');
+        let count = 0;
+        let image = "";
+        const N = `<img src="N.png">`;
+        const K = `<img src="K.png">`;
+
+        table.addEventListener('click', function(el){
+            image = document.createElement('img');
+            count++;
+            el.target.appendChild(image)
+            if(count % 2 == 0)
+            {
+                image.src = "N.png";
+            }
+            else
+            {
+                image.src = "K.png";
+            }
+            let flag = el.target.querySelector('img').getAttribute('src');
+            console.log(flag);    
+
+
+            const winningCombinations = [
+  [0, 1, 2], [3, 4, 5], [6, 7, 8], // Горизонтальные комбинации
+  [0, 3, 6], [1, 4, 7], [2, 5, 8], // Вертикальные комбинации
+  [0, 4, 8], [2, 4, 6] // Диагональные комбинации
+];
+
+for (const combination of winningCombinations) {
+  const [a, b, c] = combination;
+  if (
+    cells[a].innerHTML === K && cells[b].innerHTML === K && cells[c].innerHTML === K
+  ) {
+    alert("Крестики выиграли");
+  }
+  if (
+    cells[a].innerHTML === N && cells[b].innerHTML === N && cells[c].innerHTML === N
+  ) {
+    alert("Нолики выиграли");
+  }
+}
+            // if(cells[0].innerHTML == K && cells[1].innerHTML == K && cells[2].innerHTML == K )
+            // {
+            //     alert("Крестики выиграли") 
+            // }
+            // if(cells[0].innerHTML == N && cells[1].innerHTML == N && cells[2].innerHTML == N)
+            // {
+            //     alert("Нолики выиграли")           
+            // }
+
+        })
+
+        
+        
+
+        function Restart()
+        {
+            cells.forEach((el) => { 
+                el.innerHTML = "";
+            })
+            count = 0;
+        }
+        
+    </script>
+</body>
+</html>

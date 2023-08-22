@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style> 
+        table{
+            
+            border-radius: 30px;
+        }
+        td{
+            border: 2px solid rgb(80, 177, 177);
+            width: 132px;
+            height: 132px;
+            border-collapse: collapse;
+        }
+        .cont {
+            display: flex;
+           justify-content: center; 
+           align-items: center; 
+           height: 100vh;
+           flex-direction: column;
+           
+        }
+        .inner-cont{
+            display: none;
+        }
+        .inner-cont.active{
+            display: flex;
+           justify-content: space-evenly; 
+           align-items: center; 
+           flex-direction: column;
+           height: 100vh;
+        }
+        body{
+            background-image: url('bg.jpg');
+            overflow: hidden;
+            background-size: cover;
+            font-family: RobotoSlab;
+        }
+        .emerging-window{
+            width: 400px;
+            height: 300px;
+            border: 2px solid rgb(80, 177, 177);
+            border-radius: 25px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        .emerging-window button{
+            border-radius: 25px;
+            border: 2px solid rgb(80, 177, 177);
+            font-size: 24px;
+        }
+        a{
+            position: fixed;
+            left: 2%;
+            top: 2%;
+            font-size: 24px;
+            border-radius: 25px;
+            border: 2px solid rgb(80, 177, 177);
+            text-decoration: none;
+            color: black;
+            padding: 5px;
+        }
+        .res{
+            border-radius: 25px;
+            border: 2px solid rgb(80, 177, 177);
+            font-size: 24px;
+        }
+        @font-face {
+		font-family: 'RobotoSlab';
+		src: url(font/RobotoSlab.ttf); 
+	}
+    
+        </style>
+        <body>
+        <div class="cont">
+            <div class="emerging-window">
+                <button id="Krest">Крестики</button>
+                <button id="Nolik">нолики</button>
+            </div>
+            <div class="inner-cont">
+                <button class="res" onclick="Restart()">Restart</button>
+            <table>
+                <tr>
+                  <td style="border-top-left-radius: 30px;"></td>
+                  <td></td>
+                  <td style="border-top-right-radius: 30px;"></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td style="border-bottom-left-radius: 30px;"></td>
+                  <td></td>
+                  <td style="border-bottom-right-radius: 30px;"></td>
+                </tr>
+              </table>
+            </div>
+            <a href="index.html">Обратно</a>
+        </div>
+            
+            <script>
+        
+        const cells = document.querySelectorAll('td');
+        const restart = document.querySelector('.res');
+        const table = document.querySelector('table');
+        const container = document.querySelector('.inner-cont');
+        const emerging_window = document.querySelector('.emerging-window');
+        const krestiki = document.getElementById('Krest');
+        const noliki = document.getElementById('Nolik');  
+
+        let player; 
+
+        noliki.onclick = () => {
+            container.classList.add('active');
+            player = false;
+            emerging_window.style.display = 'none';
+            console.log(player);
+            botAttack();
+        }
+            
+        krestiki.onclick = () => {
+            container.classList.add('active');
+            player = true;
+            emerging_window.style.display = 'none';
+            console.log(player)
+        }
+
+
+        let count = 0;
+        let image = "";
+        console.log(count)
+        const N = `<img src="N.png">`;
+        const K = `<img src="K.png">`; 
+        let hod;
+
+        const winningCombinations = 
+                    [
+                        [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+                        [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+                        [0, 4, 8], [2, 4, 6] 
+                    ];
+
+            
+            table.addEventListener('click', (el) =>
+            {
+                image = document.createElement('img');
+                el.target.appendChild(image);
+                if(player == false)
+                {
+                    image.src = "N.png";
+                }
+                else
+                {
+                    image.src = "K.png";
+                }
+                // let flag = el.target.querySelector('img').getAttribute('src');
+                // console.log(flag);
+                hod = setTimeout(botAttack, 500) 
+                for (const combination of winningCombinations) 
+                {
+                    const [a, b, c] = combination;
+                    if (cells[a].innerHTML === K && cells[b].innerHTML === K && cells[c].innerHTML === K) 
+                    {
+                        clearInterval(hod);   
+                        alert("Крестики выиграли");
+                        setTimeout(Restart, 1000);
+                    }   
+                    if (cells[a].innerHTML === N && cells[b].innerHTML === N && cells[c].innerHTML === N) 
+                    {
+                    clearInterval(hod);   
+                    alert("Нолики выиграли");
+                    setTimeout(Restart, 1000);                        
+                }                               
+                }
+            });  
+    function botAttack() 
+    {
+        image = document.createElement('img');
+        let emptyCells = Array.from(cells).filter(cell => cell.innerHTML === "");
+        if (emptyCells.length > 0) {
+            let filledCells = Math.floor(Math.random() * emptyCells.length);
+            emptyCells[filledCells].appendChild(image);
+            if(player == false)
+            {
+                image.src = "K.png";
+            }
+            else
+            {
+                image.src = "N.png";
+            }
+           
+        }
+        for (const combination of winningCombinations) 
+        {
+            const [a, b, c] = combination;
+            if (cells[a].innerHTML === N && cells[b].innerHTML === N && cells[c].innerHTML === N) 
+            {
+                clearInterval(hod);   
+                alert("Нолики выиграли");
+                setTimeout(Restart, 1000);                        
+            }
+            if (cells[a].innerHTML === K && cells[b].innerHTML === K && cells[c].innerHTML === K) 
+                    {
+                        clearInterval(hod);   
+                        alert("Крестики выиграли");
+                        setTimeout(Restart, 1000);
+                    }    
+        }
+    }
+
+    function Restart()
+    {        
+        cells.forEach((el) => { 
+            el.innerHTML = "";
+        })
+        count = 0;
+    }   
+// if(cells[0].innerHTML == K && cells[1].innerHTML == K && cells[2].innerHTML == K )
+// {
+//     alert("Крестики выиграли") 
+// }
+// if(cells[0].innerHTML == N && cells[1].innerHTML == N && cells[2].innerHTML == N)
+// {
+//     alert("Нолики выиграли")           
+// }   
+    </script>
+</body>
+</html>    
+
+
